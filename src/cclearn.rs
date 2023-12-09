@@ -6,9 +6,9 @@ pub const CCLEARN_KEY: &str = "G_CCLEARN";
 
 pub fn patch(active: bool) {
     if active {
-        Patch::in_text(0x01BE9508).bytes([0x04, 0x00, 0x00, 0x14]).unwrap();
+        Patch::in_text(0x01BE9508).bytes([0x04, 0x00, 0x00, 0x14]).unwrap(); // allows reclass on cc
     } else {
-        Patch::in_text(0x01BE9508).bytes([0x88, 0x00, 0x00, 0x34]).unwrap();
+        Patch::in_text(0x01BE9508).bytes([0x88, 0x00, 0x00, 0x34]).unwrap(); // org bytes
     }
 
 }

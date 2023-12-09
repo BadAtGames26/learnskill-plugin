@@ -9,21 +9,42 @@ mod learnlevel;
 
 #[unity::hook("App", "JobData", "GetLearnJobSkillLevel")]
 pub fn jobdata_getlearnjobskilllevel(this: &JobData, method_info: OptionalMethod) -> i32{
-    let mut level = 5;
-    // need to check if game is loaded into save data or crash
-    //if get_maxlevel(this, None) < 40 as u8 {
-    //    level = GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY);
-    // } else {
-    //    level = GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY);
-    //    level = level + 20;
-    // }
-    level
+    // Check if the save is in a sequence where the function can actually not crash.
+    // Function is called before title screen, so it crashes without a check for a valid save, unsure if this covers all that can be loaded.
+    if unsafe { gamesavedata_isgmapsequence(None) } || unsafe { gamesavedata_ishubsequence(None) } || unsafe { gamesavedata_issortieormapsequence(None) } {
+        // Set levels to the appropriate levels if the variable is initialized.
+        if GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY) != 0 {
+            // Check if class can reach level 40.
+            if unsafe { jobdata_get_maxlevel(this, None) } < 40 as u8 {
+                let level = GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY);
+                return level;
+            } else {
+                let level = GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY) + 20;
+                return level;
+            }
+        // Return default function value if the either condition is not met.     
+        } else {
+            return call_original!(this, method_info);
+        }    
+    } else {
+        return call_original!(this, method_info);
+    }               
 }
 
 #[unity::from_offset("App", "JobData", "get_MaxLevel")]
 pub fn jobdata_get_maxlevel(this: &JobData, method_info: OptionalMethod) -> u8;
 
-pub fn get_maxlevel(this: &JobData, _method_info: OptionalMethod) -> u8{ unsafe { jobdata_get_maxlevel(this, None) } }
+// Somniel
+#[unity::from_offset("App", "GameSaveData", "IsHubSequence")]
+pub fn gamesavedata_ishubsequence(method_info: OptionalMethod) -> bool;
+
+// World Map
+#[unity::from_offset("App", "GameSaveData", "IsGmapSequence")]
+pub fn gamesavedata_isgmapsequence(method_info: OptionalMethod) -> bool;
+
+// Before or During Chapter
+#[unity::from_offset("App", "GameSaveData", "IsSortieOrMapSequence")]
+pub fn gamesavedata_issortieormapsequence(method_info: OptionalMethod) -> bool;
 
 #[skyline::main(name = "learnskl")]
 pub fn main() {
