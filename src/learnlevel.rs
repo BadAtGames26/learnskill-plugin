@@ -5,7 +5,7 @@ pub const LEARNLEVEL_KEY: &str = "G_LEARNLEVEL";
 
 pub struct LearnLevelSettings;
 impl ConfigBasicMenuItemSwitchMethods for LearnLevelSettings {
-    fn init_content(this: &mut ConfigBasicMenuItem) {
+    fn init_content(_this: &mut ConfigBasicMenuItem) {
         GameVariableManager::make_entry_norewind(LEARNLEVEL_KEY, 5);
     }
 

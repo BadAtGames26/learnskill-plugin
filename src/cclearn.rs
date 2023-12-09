@@ -15,7 +15,7 @@ pub fn patch(active: bool) {
 
 pub struct CCLearnSettings;
 impl ConfigBasicMenuItemSwitchMethods for CCLearnSettings {
-    fn init_content(this: &mut ConfigBasicMenuItem) {
+    fn init_content(_this: &mut ConfigBasicMenuItem) {
         GameVariableManager::make_entry_norewind(CCLEARN_KEY, 0);
     }
 
