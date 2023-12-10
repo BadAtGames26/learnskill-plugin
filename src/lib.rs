@@ -11,10 +11,11 @@ mod learnlevel;
 pub fn jobdata_getlearnjobskilllevel(this: &JobData, method_info: OptionalMethod) -> i32{
     // Check if the save is in a sequence where the function can actually not crash.
     // Function is called before title screen, so it crashes without a check for a valid save, unsure if this covers all that can be loaded.
+    // Fully working on save load on World Map, Battle Preps and Somniel.
     if unsafe { gamesavedata_isgmapsequence(None) } || unsafe { gamesavedata_ishubsequence(None) } || unsafe { gamesavedata_issortieormapsequence(None) } {
         // Set levels to the appropriate levels if the variable is initialized.
         if GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY) != 0 {
-            // Check if class can reach level 40.
+            // Check if class can reach level 40, set it to setting value if it cannot.
             if unsafe { jobdata_get_maxlevel(this, None) } < 40 as u8 {
                 let level = GameVariableManager::get_number(learnlevel::LEARNLEVEL_KEY);
                 return level;
@@ -42,7 +43,7 @@ pub fn gamesavedata_ishubsequence(method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "GameSaveData", "IsGmapSequence")]
 pub fn gamesavedata_isgmapsequence(method_info: OptionalMethod) -> bool;
 
-// Before or During Chapter
+// During Preps / Chapter
 #[unity::from_offset("App", "GameSaveData", "IsSortieOrMapSequence")]
 pub fn gamesavedata_issortieormapsequence(method_info: OptionalMethod) -> bool;
 

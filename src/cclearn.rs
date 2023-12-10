@@ -6,9 +6,9 @@ pub const CCLEARN_KEY: &str = "G_CCLEARN";
 
 pub fn patch(active: bool) {
     if active {
-        Patch::in_text(0x01BE9508).bytes([0x04, 0x00, 0x00, 0x14]).unwrap(); // allows reclass on cc
+        Patch::in_text(0x01BE9508).bytes([0x04, 0x00, 0x00, 0x14]).unwrap(); // Allows reclass on CC
     } else {
-        Patch::in_text(0x01BE9508).bytes([0x88, 0x00, 0x00, 0x34]).unwrap(); // org bytes
+        Patch::in_text(0x01BE9508).bytes([0x88, 0x00, 0x00, 0x34]).unwrap(); // Revert patching to original bytes
     }
 
 }
@@ -44,7 +44,7 @@ impl ConfigBasicMenuItemSwitchMethods for CCLearnSettings {
             this.help_text = format!("Learn Class Skill on Class Change (Unit still needs to be the correct level)").into();
 
         } else {
-            this.help_text = format!("Do not Learn Class Skill on Class Change").into();
+            this.help_text = format!("Do not learn Class Skill on Class Change").into();
         } 
     }
 
